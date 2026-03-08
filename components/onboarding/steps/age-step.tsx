@@ -4,7 +4,7 @@ import { OptionButton } from "../option-button";
 import type { AgeRange } from "@/lib/types";
 
 const options: { label: string; value: AgeRange; emoji: string }[] = [
-  { label: "Under 8", value: "under-8", emoji: "💒" },
+  { label: "Under 8", value: "under-8", emoji: "🧒" },
   { label: "8 – 11", value: "8-11", emoji: "🌱" },
   { label: "12 – 14", value: "12-14", emoji: "🌿" },
   { label: "15 – 17", value: "15-17", emoji: "🌳" },

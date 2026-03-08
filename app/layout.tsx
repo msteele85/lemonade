@@ -10,7 +10,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Lemonade \u2014 Turn Your Skills Into a Business",
   description:
-    "The easy button for teen entrepreneurship. Get AI-powered business ideas and a step-by-step plan in minutes.",
+    "The easy button for teen entrepreneurship. Build your business ideas and step-by-step plan in minutes.",
 };
 
 export default function RootLayout({

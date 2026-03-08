@@ -16,11 +16,11 @@ import type { OnboardingProfile } from "@/lib/types";
 const TOTAL_STEPS = 8;
 
 const STEP_CONFIG = [
-  { title: "What's your goal?", subtitle: "This helps us suggest the right kind of ideas." },
-  { title: "How old are you?", subtitle: "We'll tailor ideas to your age group." },
+  { title: "What's your goal?", subtitle: "So your ideas match what you're looking for." },
+  { title: "How old are you?", subtitle: "So your ideas fit your age group." },
   { title: "What are you into?", subtitle: "Pick up to 3 interests." },
   { title: "What are you good at?", subtitle: "Pick up to 3 skills." },
-  { title: "What tools do you have?", subtitle: "This helps us suggest realistic ideas." },
+  { title: "What tools do you have?", subtitle: "So your ideas are realistic to start." },
   { title: "Do you have reliable transportation?", subtitle: "Either yourself or a parent/guardian who can drive you." },
   { title: "How much time do you have?", subtitle: "Per week, roughly." },
   { title: "How much can you invest to start?", subtitle: "It's totally fine if the answer is $0." },

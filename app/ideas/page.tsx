@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { IdeaCard } from "@/components/ideas/idea-card";
 import { mockIdeas } from "@/lib/mock-ideas";
 import { Loader2, ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import type { BusinessIdea, OnboardingProfile } from "@/lib/types";
 
 export default function IdeasPage() {
@@ -55,6 +56,11 @@ export default function IdeasPage() {
 
   return (
     <main className="min-h-screen bg-[#fff5c4] px-6 py-8 max-w-md mx-auto">
+      {/* Mobile logo */}
+      <div className="flex items-center justify-center mb-4">
+        <Image src="/logo.png" alt="Lemonade logo" width={44} height={44} priority />
+      </div>
+
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <button

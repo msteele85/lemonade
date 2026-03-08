@@ -14,6 +14,7 @@ import {
   Wrench,
   Sparkles,
 } from "lucide-react";
+import Image from "next/image";
 import type { BusinessIdea, BusinessPlan, OnboardingProfile } from "@/lib/types";
 
 export default function PlanPage() {
@@ -60,13 +61,14 @@ export default function PlanPage() {
           animate={{ opacity: 1 }}
           className="text-center"
         >
+          <Image src="/logo.png" alt="Lemonade logo" width={44} height={44} className="mx-auto mb-4" priority />
           <Loader2 className="w-10 h-10 animate-spin text-lemon-600 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-navy mb-2">
             Building your business plan...
           </h2>
           <p className="text-navy-500 text-sm max-w-xs mx-auto">
-            Our AI coach is crafting a step-by-step plan just for you. This takes
-            about 10 seconds.
+            Putting together a step-by-step plan based on your answers.
+            This takes about 10 seconds.
           </p>
         </motion.div>
       </main>
@@ -94,6 +96,11 @@ export default function PlanPage() {
   return (
     <main className="min-h-screen bg-[#fff5c4] pb-12">
       <div className="max-w-md mx-auto px-6 py-8">
+        {/* Mobile logo */}
+        <div className="flex items-center justify-center mb-4">
+          <Image src="/logo.png" alt="Lemonade logo" width={44} height={44} priority />
+        </div>
+
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button
