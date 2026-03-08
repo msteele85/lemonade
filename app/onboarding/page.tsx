@@ -1,0 +1,134 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { StepLayout } from "@/components/onboarding/step-layout";
+import { GoalStep } from "@/components/onboarding/steps/goal-step";
+import { AgeStep } from "@/components/onboarding/steps/age-step";
+import { InterestsStep } from "@/components/onboarding/steps/interests-step";
+import { SkillsStep } from "@/components/onboarding/steps/skills-step";
+import { ToolsStep } from "@/components/onboarding/steps/tools-step";
+import { TransportationStep } from "@/components/onboarding/steps/transportation-step";
+import { TimeStep } from "@/components/onboarding/steps/time-step";
+import { BudgetStep } from "@/components/onboarding/steps/budget-step";
+import type { OnboardingProfile } from "@/lib/types";
+
+const TOTAL_STEPS = 8;
+
+const STEP_CONFIG = [
+  { title: "What's your goal?", subtitle: "This helps us suggest the right kind of ideas." },
+  { title: "How old are you?", subtitle: "We'll tailor ideas to your age group." },
+  { title: "What are you into?", subtitle: "Pick up to 3 interests." },
+  { title: "What are you good at?", subtitle: "Pick up to 3 skills." },
+  { title: "What tools do you have?", subtitle: "This helps us suggest realistic ideas." },
+  { title: "Do you have reliable transportation?", subtitle: "Either yourself or a parent/guardian who can drive you." },
+  { title: "How much time do you have?", subtitle: "Per week, roughly." },
+  { title: "How much can you invest to start?", subtitle: "It's totally fine if the answer is $0." },
+];
+
+export default function OnboardingPage() {
+  const router = useRouter();
+  const [step, setStep] = useState(0);
+  const [profile, setProfile] = useState<OnboardingProfile>({
+    goal: null,
+    ageRange: null,
+    interests: [],
+    skills: [],
+    tools: [],
+    hasTransportation: null,
+    timePerWeek: null,
+    startingBudget: null,
+  });
+
+  const canContinue = (() => {
+    switch (step) {
+      case 0: return profile.goal !== null;
+      case 1: return profile.ageRange !== null;
+      case 2: return profile.interests.length > 0;
+      case 3: return profile.skills.length > 0;
+      case 4: return profile.tools.length > 0;
+      case 5: return profile.hasTransportation !== null;
+      case 6: return profile.timePerWeek !== null;
+      case 7: return profile.startingBudget !== null;
+      default: return false;
+    }
+  })();
+
+  const handleContinue = async () => {
+    if (step < TOTAL_STEPS - 1) {
+      setStep(step + 1);
+    } else {
+      // Save profile to sessionStorage and navigate to ideas
+      sessionStorage.setItem("lemonade-profile", JSON.stringify(profile));
+      router.push("/ideas");
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 0) setStep(step - 1);
+    else router.push("/");
+  };
+
+  const { title, subtitle } = STEP_CONFIG[step];
+
+  return (
+    <StepLayout
+      step={step}
+      totalSteps={TOTAL_STEPS}
+      title={title}
+      subtitle={subtitle}
+      canContinue={canContinue}
+      onBack={handleBack}
+      onContinue={handleContinue}
+    >
+      {step === 0 && (
+        <GoalStep
+          value={profile.goal}
+          onChange={(v) => setProfile({ ...profile, goal: v })}
+        />
+      )}
+      {step === 1 && (
+        <AgeStep
+          value={profile.ageRange}
+          onChange={(v) => setProfile({ ...profile, ageRange: v })}
+        />
+      )}
+      {step === 2 && (
+        <InterestsStep
+          value={profile.interests}
+          onChange={(v) => setProfile({ ...profile, interests: v })}
+        />
+      )}
+      {step === 3 && (
+        <SkillsStep
+          value={profile.skills}
+          onChange={(v) => setProfile({ ...profile, skills: v })}
+        />
+      )}
+      {step === 4 && (
+        <ToolsStep
+          value={profile.tools}
+          onChange={(v) => setProfile({ ...profile, tools: v })}
+        />
+      )}
+      {step === 5 && (
+        <TransportationStep
+          value={profile.hasTransportation}
+          onChange={(v) => setProfile({ ...profile, hasTransportation: v })}
+        />
+      )}
+      {step === 6 && (
+        <TimeStep
+          value={profile.timePerWeek}
+          onChange={(v) => setProfile({ ...profile, timePerWeek: v })}
+        />
+      )}
+      {step === 7 && (
+        <BudgetStep
+          value={profile.startingBudget}
+          onChange={(v) => setProfile({ ...profile, startingBudget: v })}
+        />
+      )}
+    </StepLayout>
+  );
+}

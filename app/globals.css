@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --radius: 0.75rem;
+
+  --color-lemon-bg: #fee87f;
+  --color-lemon-50: #FFF9DB;
+  --color-lemon-100: #FFF3B0;
+  --color-lemon-200: #FFED85;
+  --color-lemon-300: #FFE65A;
+  --color-lemon-400: #FFDF30;
+  --color-lemon-500: #FFD60A;
+  --color-lemon-600: #D6B100;
+  --color-lemon-700: #A38700;
+  --color-lemon-800: #705D00;
+  --color-lemon-900: #3D3300;
+  --color-lemon: #FFD60A;
+
+  --color-navy-50: #E8EDF2;
+  --color-navy-100: #C5D0DC;
+  --color-navy-200: #9EB0C4;
+  --color-navy-300: #7790AC;
+  --color-navy-400: #507094;
+  --color-navy-500: #34567A;
+  --color-navy-600: #243D5A;
+  --color-navy-700: #1A2D44;
+  --color-navy-800: #0D1B2A;
+  --color-navy-900: #060E17;
+  --color-navy: #0D1B2A;
+
+  --font-sans: "JetBrains Mono", monospace;
+  --font-title: "Bitcount Prop Double", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-white text-navy antialiased;
+  font-family: var(--font-jetbrains, "JetBrains Mono"), monospace;
+}

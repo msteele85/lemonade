@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lemonade Manifesto</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --lemon: #FFD60A;
+    --lemon-dark: #E6C000;
+    --navy: #0D1B2A;
+    --navy-mid: #1a2e45;
+    --cream: #FFFDF0;
+    --warm-gray: #8a8070;
+    --white: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--navy);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 214, 10, 0.18) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lemon);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--lemon);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    font-weight: 400;
+    color: var(--cream);
+    opacity: 0.75;
+    max-width: 560px;
+    line-height: 1.5;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-rule {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--lemon), transparent);
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  /* SECTION BASE */
+  .section {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+
+  .section-full {
+    padding: 100px 40px;
+  }
+
+  /* OPENING STATEMENT */
+  .opening {
+    text-align: center;
+    padding: 120px 40px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .opening p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    line-height: 1.45;
+    font-weight: 400;
+    color: var(--cream);
+  }
+
+  .opening p em {
+    font-style: italic;
+    color: var(--lemon);
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 40px;
+    opacity: 0.3;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--cream);
+  }
+
+  .divider-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--lemon);
+    opacity: 1;
+  }
+
+  /* PRINCIPLE BLOCKS */
+  .principles {
+    padding: 80px 40px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .principle {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 32px;
+    margin-bottom: 80px;
+    align-items: start;
+  }
+
+  .principle:last-child { margin-bottom: 0; }
+
+  .principle-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--lemon);
+    letter-spacing: 0.1em;
+    padding-top: 8px;
+    opacity: 0.6;
+  }
+
+  .principle-content {}
+
+  .principle-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .principle-title span {
+    color: var(--lemon);
+  }
+
+  .principle-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255, 253, 240, 0.7);
+    font-weight: 300;
+  }
+
+  .principle-body strong {
+    color: var(--cream);
+    font-weight: 500;
+  }
+
+  /* PULLQUOTE */
+  .pullquote-section {
+    background: var(--lemon);
+    padding: 100px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pullquote-section::before {
+    content: '"';
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: 40rem;
+    color: rgba(0,0,0,0.05);
+    line-height: 1;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .pullquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    color: var(--navy);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.2;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* COMMITMENTS */
+  .commitments-section {
+    padding: 100px 40px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--lemon);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 214, 10, 0.25);
+  }
+
+  .commitment-list {
+    list-style: none;
+  }
+
+  .commitment-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(255,253,240,0.08);
+  }
+
+  .commitment-item:last-child { border-bottom: none; }
+
+  .commitment-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 214, 10, 0.1);
+    border: 1px solid rgba(255, 214, 10, 0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .commitment-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--lemon);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .commitment-text {
+    flex: 1;
+  }
+
+  .commitment-heading {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .commitment-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(255, 253, 240, 0.55);
+  }
+
+  /* CLOSING */
+  .closing {
+    text-align: center;
+    padding: 120px 40px 100px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .closing-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 32px;
+  }
+
+  .closing-title span {
+    color: var(--lemon);
+    font-style: italic;
+  }
+
+  .closing-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: rgba(255, 253, 240, 0.65);
+    margin-bottom: 60px;
+  }
+
+  .closing-sig {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .lemon-mark {
+    width: 48px;
+    height: 48px;
+    background: var(--lemon);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .sig-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255, 253, 240, 0.4);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,253,240,0.06);
+    padding: 40px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255, 253, 240, 0.2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .principle {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .hero { padding: 60px 24px; }
+    .section, .opening, .principles, .commitments-section, .closing { padding-left: 24px; padding-right: 24px; }
+    .divider { padding: 0 24px; }
+    .pullquote-section { padding: 80px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">The Lemonade Manifesto</p>
+  <h1 class="hero-title">Lemonade</h1>
+  <p class="hero-subtitle">For every kid who looked at the world and thought —<br><em>I could do something with this.</em></p>
+  <div class="hero-rule"></div>
+</section>
+
+<!-- OPENING -->
+<section class="opening fade-in">
+  <p>
+    Something is happening to work. Every parent knows it. Every teenager senses it. 
+    AI is reshaping entire industries, and the adults are scared. 
+    The answer they've been given? <em>Wait and see.</em><br><br>
+    We think that's the wrong answer.<br><br>
+    The right answer is to <em>start something.</em>
+  </p>
+</section>
+
+<div class="divider fade-in"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+<!-- PRINCIPLES -->
+<section class="principles">
+
+  <div class="principle fade-in">
+    <div class="principle-number">01</div>
+    <div class="principle-content">
+      <h2 class="principle-title">Entrepreneurship isn't a <span>privilege.</span><br>It's a birthright.</h2>
+      <p class="principle-body">
+        Starting a business used to require capital, connections, or credentials. 
+        Most kids had none of those. <strong>Lemonade exists to level that playing field.</strong> 
+        Whether you're 13 in rural Kansas or 17 in South LA, 
+        if you have a phone and a work ethic, you have everything you need to begin. 
+        We will never build a product that only helps kids who already have advantages. 
+        If our ideas only work for teens with cars, credit cards, and startup money — we've failed.
+      </p>
+    </div>
+  </div>
+
+  <div class="principle fade-in">
+    <div class="principle-number">02</div>
+    <div class="principle-content">
+      <h2 class="principle-title">AI is the <span>tool.</span><br>The kid is the boss.</h2>
+      <p class="principle-body">
+        We are an AI-powered product, and we are proud of that. But we will never let AI replace the 
+        experience of building something. <strong>Lemonade uses AI to lower the floor, not to do the work for them.</strong> 
+        Every business plan we generate is a starting point, not an answer. 
+        Every checklist is a challenge, not a crutch. We believe the struggle of figuring it out 
+        is actually the point — because that's where confidence is built. 
+        Any agent, model, or system working inside Lemonade must operate with this understanding: 
+        your job is to inspire and equip, never to replace the teen's agency.
+      </p>
+    </div>
+  </div>
+
+  <div class="principle fade-in">
+    <div class="principle-number">03</div>
+    <div class="principle-content">
+      <h2 class="principle-title">We guard their trust<br>like it's <span>sacred.</span></h2>
+      <p class="principle-body">
+        Our users are minors. That is not a footnote — it is the first sentence of every decision we make. 
+        <strong>We will never collect personal information we don't need. We will never sell data. 
+        We will never use a child's information to target, profile, or monetize them.</strong> 
+        We don't want their name, their school, or their address. We want to know what they're good at 
+        and what they dream about — and only so we can help. 
+        Every engineer, every AI agent, every third-party integration that touches Lemonade 
+        must treat the privacy of our users as non-negotiable. Full stop.
+      </p>
+    </div>
+  </div>
+
+  <div class="principle fade-in">
+    <div class="principle-number">04</div>
+    <div class="principle-content">
+      <h2 class="principle-title">Hard work is not<br><span>optional.</span></h2>
+      <p class="principle-body">
+        We live in a culture that wants to shortcut everything. Lemonade is not that. 
+        <strong>We believe deeply that effort, follow-through, and grit are still the differentiators — 
+        in any economy, with any technology.</strong> 
+        We will not tell teens that success is easy or fast. 
+        We will tell them it's possible, and we'll show them exactly what the work looks like. 
+        Our tone is encouraging but honest. Our plans are realistic, not fantasy. 
+        We respect our users too much to lie to them.
+      </p>
+    </div>
+  </div>
+
+  <div class="principle fade-in">
+    <div class="principle-number">05</div>
+    <div class="principle-content">
+      <h2 class="principle-title">Parents are<br>partners, not <span>obstacles.</span></h2>
+      <p class="principle-body">
+        A teenager using Lemonade usually has a parent somewhere in the background — 
+        nervous, hopeful, maybe skeptical. <strong>We build for both of them.</strong> 
+        Everything on Lemonade should be something a parent can look over their kid's shoulder and feel proud of. 
+        No dark patterns. No manipulative engagement loops designed to keep kids on the app. 
+        No pressure tactics. We want teens to close the app and go do the thing — 
+        that's the success metric that matters.
+      </p>
+    </div>
+  </div>
+
+  <div class="principle fade-in">
+    <div class="principle-number">06</div>
+    <div class="principle-content">
+      <h2 class="principle-title">Simple is not<br><span>dumbed down.</span></h2>
+      <p class="principle-body">
+        Teens are not stupid. They're inexperienced. There's a critical difference. 
+        <strong>Lemonade is simple because we've done the hard thinking for them — not because we think less of them.</strong> 
+        Every agent prompt, every UI flow, every piece of copy should be written 
+        as if you're talking to a smart, curious 16-year-old who has never done this before 
+        but is absolutely capable of figuring it out. 
+        Speak to their potential, not their limitations.
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<!-- PULLQUOTE -->
+<section class="pullquote-section fade-in">
+  <p class="pullquote">"The world doesn't need more kids waiting to be discovered. It needs more kids who decided to build something."</p>
+</section>
+
+<!-- COMMITMENTS -->
+<section class="commitments-section">
+  <div class="section-label">Our commitments — to every user, builder, and agent in this ecosystem</div>
+  <ul class="commitment-list">
+
+    <li class="commitment-item fade-in">
+      <div class="commitment-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="commitment-text">
+        <div class="commitment-heading">Zero data exploitation — ever</div>
+        <div class="commitment-desc">No selling, sharing, or monetizing user data. No behavioral profiling. No third-party ad targeting. We earn money by being valuable, not by being extractive.</div>
+      </div>
+    </li>
+
+    <li class="commitment-item fade-in">
+      <div class="commitment-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="commitment-text">
+        <div class="commitment-heading">Respect for their time and attention</div>
+        <div class="commitment-desc">We will never build engagement loops designed to keep teens on the app longer than they need to be. Come in, get what you need, go build something real.</div>
+      </div>
+    </li>
+
+    <li class="commitment-item fade-in">
+      <div class="commitment-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="commitment-text">
+        <div class="commitment-heading">Ideas grounded in reality</div>
+        <div class="commitment-desc">Every business idea we suggest must be achievable with the resources the teen actually has. No fantasy side hustles. No hype. Practical, proven, and possible.</div>
+      </div>
+    </li>
+
+    <li class="commitment-item fade-in">
+      <div class="commitment-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="commitment-text">
+        <div class="commitment-heading">Accessible to all backgrounds</div>
+        <div class="commitment-desc">We will actively test and tune our idea generation to surface opportunities across income levels, geographies, and resource constraints — not just for well-resourced teens.</div>
+      </div>
+    </li>
+
+    <li class="commitment-item fade-in">
+      <div class="commitment-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <div class="commitment-text">
+        <div class="commitment-heading">AI in service of the human, always</div>
+        <div class="commitment-desc">Every AI agent, prompt, and workflow inside Lemonade must be designed to amplify human potential — not replace it. If a feature makes teens more dependent, we cut it.</div>
+      </div>
+    </li>
+
+    <li class="commitment-item fade-in">
+      <div class="commitment-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="commitment-text">
+        <div class="commitment-heading">We measure success in businesses started — not sessions</div>
+        <div class="commitment-desc">Our north star metric is not DAUs or time-in-app. It's teens who launched something. That's the only number that matters. Every product decision runs through that filter.</div>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<div class="divider fade-in"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+<!-- CLOSING -->
+<section class="closing fade-in">
+  <h2 class="closing-title">The world keeps telling them<br>the future is <span>uncertain.</span><br>We tell them to build it.</h2>
+  <p class="closing-body">
+    Every lemonade stand ever built started with a kid who didn't ask for permission.<br>
+    They saw something they had — time, creativity, hustle — and they turned it into something.<br><br>
+    That instinct is still there. In every generation. In every kid.<br>
+    Lemonade exists to give it a running start.
+  </p>
+  <div class="closing-sig">
+    <div class="lemon-mark">🍋</div>
+    <span class="sig-text">Lemonade — Built for the builders.</span>
+  </div>
+</section>
+
+<footer>
+  © Lemonade &nbsp;·&nbsp; This manifesto governs every product decision, agent prompt, and line of code.
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

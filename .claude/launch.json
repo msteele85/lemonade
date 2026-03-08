@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lemonade-dev",
+      "runtimeExecutable": "/Users/msteele/.nvm/versions/node/v20.20.1/bin/node",
+      "runtimeArgs": ["/Users/msteele/.nvm/versions/node/v20.20.1/bin/npm", "run", "dev"],
+      "port": 3000
+    }
+  ]
+}
