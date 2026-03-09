@@ -12,14 +12,17 @@ const options: { label: Skill; emoji: string }[] = [
   { label: "Good writer", emoji: "✍️" },
   { label: "Teacher/explainer", emoji: "📚" },
   { label: "Athlete", emoji: "🏃" },
+  { label: "Other", emoji: "✨" },
 ];
 
 interface SkillsStepProps {
   value: Skill[];
   onChange: (value: Skill[]) => void;
+  customText: string;
+  onCustomTextChange: (value: string) => void;
 }
 
-export function SkillsStep({ value, onChange }: SkillsStepProps) {
+export function SkillsStep({ value, onChange, customText, onCustomTextChange }: SkillsStepProps) {
   const toggle = (skill: Skill) => {
     if (value.includes(skill)) {
       onChange(value.filter((s) => s !== skill));
@@ -42,6 +45,21 @@ export function SkillsStep({ value, onChange }: SkillsStepProps) {
           onClick={() => toggle(opt.label)}
         />
       ))}
+      {value.includes("Other") && (
+        <div className="mt-2">
+          <textarea
+            value={customText}
+            onChange={(e) => onCustomTextChange(e.target.value)}
+            placeholder="Tell us what you're good at..."
+            maxLength={200}
+            className="w-full p-3 rounded-xl border-2 border-navy-100 bg-white text-navy text-sm placeholder:text-navy-300 focus:outline-none focus:border-lemon transition-colors resize-none"
+            rows={3}
+          />
+          <p className="text-xs text-navy-400 mt-1">
+            Don&apos;t share personal info — just share some of your interests.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

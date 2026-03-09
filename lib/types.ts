@@ -24,7 +24,8 @@ export type Skill =
   | "Tech-savvy"
   | "Good writer"
   | "Teacher/explainer"
-  | "Athlete";
+  | "Athlete"
+  | "Other";
 
 export type Tool =
   | "Smartphone"
@@ -36,6 +37,8 @@ export type Tool =
   | "None of the above";
 
 export type HasTransportation = "yes-self" | "yes-parent" | "no";
+
+export type NeighborhoodType = "suburban" | "urban-apartment" | "rural" | "other";
 
 export type TimePerWeek =
   | "Less than 5 hrs"
@@ -53,9 +56,12 @@ export interface OnboardingProfile {
   goal: GoalType | null;
   ageRange: AgeRange | null;
   interests: Interest[];
+  customInterests: string;
   skills: Skill[];
+  customSkills: string;
   tools: Tool[];
   hasTransportation: HasTransportation | null;
+  neighborhoodType: NeighborhoodType | null;
   timePerWeek: TimePerWeek | null;
   startingBudget: StartingBudget | null;
 }

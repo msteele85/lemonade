@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
       !profile.skills.length ||
       !profile.tools.length ||
       !profile.hasTransportation ||
+      !profile.neighborhoodType ||
       !profile.timePerWeek ||
       !profile.startingBudget
     ) {

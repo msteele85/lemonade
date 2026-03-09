@@ -19,9 +19,11 @@ const options: { label: Interest; emoji: string }[] = [
 interface InterestsStepProps {
   value: Interest[];
   onChange: (value: Interest[]) => void;
+  customText: string;
+  onCustomTextChange: (value: string) => void;
 }
 
-export function InterestsStep({ value, onChange }: InterestsStepProps) {
+export function InterestsStep({ value, onChange, customText, onCustomTextChange }: InterestsStepProps) {
   const toggle = (interest: Interest) => {
     if (value.includes(interest)) {
       onChange(value.filter((i) => i !== interest));
@@ -44,6 +46,21 @@ export function InterestsStep({ value, onChange }: InterestsStepProps) {
           onClick={() => toggle(opt.label)}
         />
       ))}
+      {value.includes("Other") && (
+        <div className="mt-2">
+          <textarea
+            value={customText}
+            onChange={(e) => onCustomTextChange(e.target.value)}
+            placeholder="Tell us what you're interested in..."
+            maxLength={200}
+            className="w-full p-3 rounded-xl border-2 border-navy-100 bg-white text-navy text-sm placeholder:text-navy-300 focus:outline-none focus:border-lemon transition-colors resize-none"
+            rows={3}
+          />
+          <p className="text-xs text-navy-400 mt-1">
+            Don&apos;t share personal info — just tell us what you&apos;re into.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

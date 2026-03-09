@@ -99,6 +99,16 @@ export function StepLayout({
           >
             {step === totalSteps - 1 ? "See My Ideas" : "Continue"}
           </motion.button>
+
+          {/* Go back link */}
+          {step > 0 && (
+            <button
+              onClick={onBack}
+              className="w-full mt-3 text-navy-400 hover:text-navy-600 text-sm font-medium transition-colors"
+            >
+              &larr; Go back
+            </button>
+          )}
         </div>
       </div>
     </div>

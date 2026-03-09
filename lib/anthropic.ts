@@ -12,7 +12,7 @@ function stripMarkdownFences(text: string): string {
 }
 
 function formatGoal(goal: OnboardingProfile["goal"]): string {
-  if (goal === "fast-cash") return "Make money quickly (one-time or immediate earnings)";
+  if (goal === "fast-cash") return "Make money RIGHT NOW — ideas must be doable within a few hours today. Think lemonade stand, car wash, yard sale, bake sale, dog walking — things that can start and earn money the same day. No multi-day setup, no waiting for customers to find you online.";
   if (goal === "recurring-income") return "Build something that earns money every month";
   return "Not specified";
 }
@@ -21,6 +21,14 @@ function formatTransportation(t: OnboardingProfile["hasTransportation"]): string
   if (t === "yes-self") return "Yes — can drive themselves";
   if (t === "yes-parent") return "Yes — parent/guardian can drive them";
   if (t === "no") return "No reliable transportation";
+  return "Not specified";
+}
+
+function formatNeighborhood(n: OnboardingProfile["neighborhoodType"]): string {
+  if (n === "suburban") return "Suburban neighborhood with houses and yards nearby — can go door-to-door, has neighbors to sell to";
+  if (n === "urban-apartment") return "City / apartment building — limited door-to-door access, but foot traffic and density are high";
+  if (n === "rural") return "Rural / spread out — neighbors are far apart, limited foot traffic, but may have land or outdoor space";
+  if (n === "other") return "Other living situation — don't assume door-to-door or neighborhood-based ideas will work";
   return "Not specified";
 }
 
@@ -33,12 +41,25 @@ function formatProfile(profile: OnboardingProfile): string {
     `Goal: ${formatGoal(profile.goal)}`,
     `Age range: ${profile.ageRange}`,
     `Interests: ${profile.interests.join(", ")}`,
-    `Skills: ${profile.skills.join(", ")}`,
+  ];
+
+  if (profile.customInterests?.trim()) {
+    lines.push(`Additional interests (in their own words): ${profile.customInterests.trim()}`);
+  }
+
+  lines.push(`Skills: ${profile.skills.join(", ")}`);
+
+  if (profile.customSkills?.trim()) {
+    lines.push(`Additional skills (in their own words): ${profile.customSkills.trim()}`);
+  }
+
+  lines.push(
     `Tools available: ${profile.tools.join(", ")}`,
     `Reliable transportation: ${formatTransportation(profile.hasTransportation)}`,
+    `Neighborhood: ${formatNeighborhood(profile.neighborhoodType)}`,
     `Time per week: ${profile.timePerWeek}`,
     `Starting budget: ${profile.startingBudget}`,
-  ];
+  );
 
   if (isYoungAge(profile.ageRange)) {
     lines.push("IMPORTANT: This user is under 12. All ideas MUST heavily involve a parent or guardian. Suggest activities they do together with an adult.");
@@ -72,14 +93,19 @@ const CORE_RULES = `NON-NEGOTIABLE RULES:
    - Anything illegal for their age range, or requiring business licenses or age-restricted permits
 6. RESOURCE-SENSITIVE: Only suggest what's achievable with the exact resources they listed. Zero assumptions about cars, money, or tools they didn't mention. If no reliable transportation, no ideas requiring travel or hauling equipment. If $0 budget, no ideas requiring upfront purchases.
 7. REAL CHOICE: Spread ideas across different effort levels, investment levels, and types of work. Include manual labor, trades, and hands-on work — not just tech-focused ideas.
-8. GOAL-AWARE: If their goal is fast cash, suggest ideas that earn money today or this week. If recurring income, suggest ideas that become ongoing monthly earners.
-9. HIDDEN AI: You are invisible. The user is the builder. All wording puts the power in their hands. Say "here's how you build this" not "I'll build this for you."`;
+8. GOAL-AWARE: If their goal is "fast cash," ONLY suggest ideas they can execute within a few hours and earn money the same day. Think classic hustle: lemonade stand, car wash, yard sale, bake sale, lawn mowing, dog walking, driveway shoveling. No setup that takes days. No waiting for online customers. Immediate action, immediate money. Provide as much variety as possible based on their interests and skills. If recurring income, suggest ideas that become ongoing monthly earners.
+9. HIDDEN AI: You are invisible. The user is the builder. All wording puts the power in their hands. Say "here's how you build this" not "I'll build this for you."
+10. NEIGHBORHOOD-AWARE: Factor in their living situation. If they live in an apartment building, don't suggest door-to-door lawn care. If they're rural, don't suggest ideas that need foot traffic. If suburban, leverage the neighborhood. Always match ideas to where they actually live.`;
 
 // ── Idea Generation (Haiku — fast & cheap) ──
 
 export async function generateIdeas(
   profile: OnboardingProfile
 ): Promise<BusinessIdea[]> {
+  const fastCashExtra = profile.goal === "fast-cash"
+    ? "\n\nCRITICAL: This user wants FAST CASH. Every single idea must be something they can start and earn money from within a few hours TODAY. No multi-day setup. No waiting for customers to find them online. Think: lemonade stand, car wash, bake sale, yard sale, dog walking, lawn mowing, snow shoveling, errand running — classic same-day hustles. Give as much variety as possible based on their specific interests and skills."
+    : "";
+
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
     max_tokens: 1024,
@@ -87,7 +113,7 @@ export async function generateIdeas(
     messages: [
       {
         role: "user",
-        content: `Given this young person's profile:\n${formatProfile(profile)}\n\nSuggest exactly 5 business ideas. For each, return JSON with: id (short kebab-case string), name, tagline (1 sentence), difficulty (Easy or Medium), weeklyEarningPotential (range string like "$20-$50"), whyItFitsYou (1-2 sentences referencing their profile — speak directly to them in second person, be warm and honest like a mentor).\n\nReturn ONLY a JSON array, no markdown, no explanation.`,
+        content: `Given this young person's profile:\n${formatProfile(profile)}${fastCashExtra}\n\nSuggest exactly 5 business ideas. For each, return JSON with: id (short kebab-case string), name, tagline (1 sentence), difficulty (Easy or Medium), weeklyEarningPotential (range string like "$20-$50"), whyItFitsYou (1-2 sentences referencing their profile — speak directly to them in second person, be warm and honest like a mentor).\n\nReturn ONLY a JSON array, no markdown, no explanation.`,
       },
     ],
   });
