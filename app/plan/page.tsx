@@ -62,7 +62,6 @@ export default function PlanPage() {
             animate={{ opacity: 1 }}
             className="text-center"
           >
-            <Image src="/logo.png" alt="Lemonade logo" width={44} height={44} className="mx-auto mb-4" priority />
             <Image
               src="/logo.png"
               alt="Loading"

@@ -28,8 +28,8 @@ export function StepLayout({
 }: StepLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
-      {/* Desktop left panel: logo + branding */}
-      <div className="hidden md:flex md:w-1/2 bg-[#fee87f] flex-col items-center justify-center border-r-[5px] border-[#faf2e7]">
+      {/* Desktop left panel: logo + branding (fixed) */}
+      <div className="hidden md:flex md:w-1/2 md:fixed md:inset-y-0 md:left-0 bg-[#fee87f] flex-col items-center justify-center border-r-[5px] border-[#faf2e7]">
         <Image
           src="/logo.png"
           alt="Lemonade logo"
@@ -41,8 +41,8 @@ export function StepLayout({
         <h1 className="text-5xl font-extrabold text-navy font-title">Lemonade</h1>
       </div>
 
-      {/* Right panel (full width on mobile, half on desktop) */}
-      <div className="flex-1 flex flex-col bg-[#fff5c4] px-6 py-8 md:overflow-y-auto">
+      {/* Right panel (full width on mobile, offset on desktop to account for fixed left) */}
+      <div className="flex-1 flex flex-col bg-[#fff5c4] px-6 py-8 md:ml-[50%] md:w-1/2 md:overflow-y-auto">
         <div className="max-w-md mx-auto w-full flex flex-col flex-1">
           {/* Mobile logo */}
           <div className="flex items-center justify-center mb-4 md:hidden">
@@ -90,11 +90,16 @@ export function StepLayout({
             </motion.div>
           </AnimatePresence>
 
-          {/* Continue button */}
+          {/* Spacer so sticky footer doesn't overlap content on mobile */}
+          <div className="h-28 md:hidden" />
+        </div>
+
+        {/* Sticky footer on mobile, inline on desktop */}
+        <div className="fixed bottom-0 left-0 right-0 z-20 bg-[#fff5c4] px-6 pb-5 pt-3 md:static md:z-auto md:px-0 md:pb-0 md:pt-0 md:max-w-md md:mx-auto md:w-full">
           <motion.button
             onClick={onContinue}
             disabled={!canContinue}
-            className="w-full mt-6 bg-lemon hover:bg-lemon-600 disabled:bg-navy-50 disabled:text-navy-300 text-navy font-bold text-lg py-4 rounded-xl transition-colors active:scale-95"
+            className="w-full bg-lemon hover:bg-lemon-600 disabled:bg-navy-50 disabled:text-navy-300 text-navy font-bold text-lg py-4 rounded-xl transition-colors active:scale-95 shadow-lg shadow-lemon/30 md:shadow-none md:mt-6"
             whileTap={canContinue ? { scale: 0.97 } : {}}
           >
             {step === totalSteps - 1 ? "See My Ideas" : "Continue"}
@@ -104,7 +109,7 @@ export function StepLayout({
           {step > 0 && (
             <button
               onClick={onBack}
-              className="w-full mt-3 text-navy-400 hover:text-navy-600 text-sm font-medium transition-colors"
+              className="w-full mt-2 text-navy-400 hover:text-navy-600 text-sm font-medium transition-colors"
             >
               &larr; Go back
             </button>
