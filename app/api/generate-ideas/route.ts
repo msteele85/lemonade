@@ -2,9 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateIdeas } from "@/lib/anthropic";
 import type { OnboardingProfile } from "@/lib/types";
 
+interface RequestBody {
+  profile: OnboardingProfile;
+  excludeNames?: string[];
+  feedback?: string;
+  count?: number;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const profile: OnboardingProfile = await req.json();
+    const body: RequestBody = await req.json();
+
+    // Support both old format (profile at top level) and new format (profile nested)
+    const profile: OnboardingProfile = body.profile ?? (body as unknown as OnboardingProfile);
 
     // Basic validation
     if (
@@ -24,7 +34,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const ideas = await generateIdeas(profile);
+    const ideas = await generateIdeas({
+      profile,
+      count: body.count,
+      excludeNames: body.excludeNames,
+      feedback: body.feedback,
+    });
 
     return NextResponse.json({ ideas });
   } catch (error) {

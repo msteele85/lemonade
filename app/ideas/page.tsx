@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { IdeaCard } from "@/components/ideas/idea-card";
 import { PageLayout } from "@/components/shared/page-layout";
 import { mockIdeas } from "@/lib/mock-ideas";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import type { BusinessIdea, OnboardingProfile } from "@/lib/types";
 
@@ -15,7 +15,11 @@ export default function IdeasPage() {
   const [ideas, setIdeas] = useState<BusinessIdea[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState("");
+  const [moreError, setMoreError] = useState<string | null>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("lemonade-profile");
@@ -32,7 +36,7 @@ export default function IdeasPage() {
     fetch("/api/generate-ideas", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(profile),
+      body: JSON.stringify({ profile }),
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("API error");
@@ -52,6 +56,42 @@ export default function IdeasPage() {
     if (chosen) {
       sessionStorage.setItem("lemonade-chosen-idea", JSON.stringify(chosen));
       router.push("/plan");
+    }
+  };
+
+  const handleGenerateMore = async () => {
+    const stored = sessionStorage.getItem("lemonade-profile");
+    if (!stored) return;
+
+    setLoadingMore(true);
+    setMoreError(null);
+
+    try {
+      const profile: OnboardingProfile = JSON.parse(stored);
+      const res = await fetch("/api/generate-ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          profile,
+          count: 3,
+          excludeNames: ideas.map((i) => i.name),
+          feedback: feedback.trim() || undefined,
+        }),
+      });
+
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      setIdeas((prev) => [...prev, ...data.ideas]);
+      setFeedback("");
+
+      // Scroll to new ideas after they render
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 150);
+    } catch {
+      setMoreError("Couldn't generate more ideas. Try again.");
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -113,6 +153,47 @@ export default function IdeasPage() {
                     onSelect={() => setSelectedId(idea.id)}
                   />
                 ))}
+              </div>
+
+              {/* Generate more ideas section */}
+              <div ref={bottomRef} className="mb-6">
+                <div className="border border-dashed border-navy-200 rounded-2xl p-5 bg-white/40">
+                  <p className="text-sm font-medium text-navy mb-3 text-center">
+                    Not seeing the right fit?
+                  </p>
+
+                  <textarea
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Tell us what you're looking for (optional) — e.g. &quot;I want something I can do indoors&quot; or &quot;These are too hard&quot;"
+                    className="w-full text-sm bg-white border border-navy-100 rounded-xl px-4 py-3 text-navy placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-lemon focus:border-lemon resize-none mb-3"
+                    rows={2}
+                    maxLength={300}
+                    disabled={loadingMore}
+                  />
+
+                  <button
+                    onClick={handleGenerateMore}
+                    disabled={loadingMore}
+                    className="w-full flex items-center justify-center gap-2 bg-white hover:bg-navy-50 disabled:bg-navy-50 disabled:text-navy-300 text-navy font-bold py-3 rounded-xl transition-colors border border-navy-200"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${loadingMore ? "animate-spin" : ""}`} />
+                    {loadingMore ? "Generating..." : "Show Me More Ideas"}
+                  </button>
+
+                  <AnimatePresence>
+                    {moreError && (
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="text-red-600 text-sm text-center mt-2"
+                      >
+                        {moreError}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
               <motion.button

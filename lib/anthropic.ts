@@ -99,12 +99,31 @@ const CORE_RULES = `NON-NEGOTIABLE RULES:
 
 // ── Idea Generation (Haiku — fast & cheap) ──
 
+interface GenerateIdeasOptions {
+  profile: OnboardingProfile;
+  count?: number;
+  excludeNames?: string[];
+  feedback?: string;
+}
+
 export async function generateIdeas(
-  profile: OnboardingProfile
+  options: GenerateIdeasOptions
 ): Promise<BusinessIdea[]> {
+  const { profile, count = 5, excludeNames = [], feedback } = options;
+
   const fastCashExtra = profile.goal === "fast-cash"
     ? "\n\nCRITICAL: This user wants FAST CASH. Every single idea must be something they can start and earn money from within a few hours TODAY. No multi-day setup. No waiting for customers to find them online. Think: lemonade stand, car wash, bake sale, yard sale, dog walking, lawn mowing, snow shoveling, errand running — classic same-day hustles. Give as much variety as possible based on their specific interests and skills."
     : "";
+
+  let excludeSection = "";
+  if (excludeNames.length > 0) {
+    excludeSection = `\n\nYou already suggested these ideas and the user wants DIFFERENT ones: ${excludeNames.join(", ")}. Do NOT repeat any of these. Come up with completely new, distinct ideas.`;
+  }
+
+  let feedbackSection = "";
+  if (feedback?.trim()) {
+    feedbackSection = `\n\nThe user gave this feedback on why the previous ideas weren't a good fit: "${feedback.trim()}". Use this to guide your new suggestions — address their concerns and steer in a different direction.`;
+  }
 
   const message = await client.messages.create({
     model: "claude-haiku-4-5-20251001",
@@ -113,7 +132,7 @@ export async function generateIdeas(
     messages: [
       {
         role: "user",
-        content: `Given this young person's profile:\n${formatProfile(profile)}${fastCashExtra}\n\nSuggest exactly 5 business ideas. For each, return JSON with: id (short kebab-case string), name, tagline (1 sentence), difficulty (Easy or Medium), weeklyEarningPotential (range string like "$20-$50"), whyItFitsYou (1-2 sentences referencing their profile — speak directly to them in second person, be warm and honest like a mentor).\n\nReturn ONLY a JSON array, no markdown, no explanation.`,
+        content: `Given this young person's profile:\n${formatProfile(profile)}${fastCashExtra}${excludeSection}${feedbackSection}\n\nSuggest exactly ${count} business ideas. For each, return JSON with: id (short kebab-case string), name, tagline (1 sentence), difficulty (Easy or Medium), weeklyEarningPotential (range string like "$20-$50"), whyItFitsYou (1-2 sentences referencing their profile — speak directly to them in second person, be warm and honest like a mentor).\n\nReturn ONLY a JSON array, no markdown, no explanation.`,
       },
     ],
   });

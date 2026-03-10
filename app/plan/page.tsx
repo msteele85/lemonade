@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { PlanSection } from "@/components/plan/plan-section";
 import { Checklist } from "@/components/plan/checklist";
+import { DonationSection } from "@/components/plan/donation-section";
 import { PageLayout } from "@/components/shared/page-layout";
 import {
   ArrowLeft,
@@ -13,8 +14,10 @@ import {
   Users,
   Wrench,
   Sparkles,
+  Download,
 } from "lucide-react";
 import Image from "next/image";
+import { downloadPlanPDF } from "@/lib/generate-pdf";
 import type { BusinessIdea, BusinessPlan, OnboardingProfile } from "@/lib/types";
 
 export default function PlanPage() {
@@ -204,6 +207,21 @@ export default function PlanPage() {
               <p className="font-bold text-lg mb-1">You got this!</p>
               <p className="text-sm text-navy/80">{plan.encouragingClosing}</p>
             </motion.div>
+
+            {/* Download PDF */}
+            <motion.button
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              onClick={() => idea && plan && downloadPlanPDF(idea, plan)}
+              className="w-full flex items-center justify-center gap-2 bg-white hover:bg-navy-50 text-navy font-bold py-3 rounded-xl transition-colors border border-navy-200"
+            >
+              <Download className="w-4 h-4" />
+              Download Plan (PDF)
+            </motion.button>
+
+            {/* Donation */}
+            <DonationSection />
           </div>
         </div>
       </div>
