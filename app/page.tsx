@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[#fff5c4]">
+    <main className="relative min-h-screen flex flex-col items-center justify-center px-6 bg-[#fff5c4]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,9 +35,10 @@ export default function Home() {
           Get Started
         </button>
         <p className="text-sm text-navy-400 mt-4">
-          No sign-up required. Totally free to start.
+          No sign-up required. Totally free.
         </p>
       </motion.div>
+      <p className="absolute bottom-4 text-xs text-navy-300/60">v1.1</p>
     </main>
   );
 }
