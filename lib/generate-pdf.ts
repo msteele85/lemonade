@@ -100,7 +100,7 @@ export function downloadPlanPDF(idea: BusinessIdea, plan: BusinessPlan) {
   doc.text(plan.encouragingClosing, margin, y, { maxWidth: contentWidth });
   y += 10;
   doc.setFontSize(9);
-  doc.text("Made with Lemonade — lemonade.app", margin, y);
+  doc.text("Made with Lemonade — howcanimakesomemoney.com", margin, y);
 
   // ── Save ──
   const safeName = idea.name.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, "-").toLowerCase();
