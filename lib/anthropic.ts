@@ -137,8 +137,12 @@ export async function generateIdeas(
     ],
   });
 
-  const raw =
-    message.content[0].type === "text" ? message.content[0].text : "";
+  // Models with adaptive thinking emit a thinking block first, so find the
+  // text block rather than assuming it's at index 0.
+  const textBlock = message.content.find(
+    (block): block is Anthropic.TextBlock => block.type === "text"
+  );
+  const raw = textBlock ? textBlock.text : "";
   return JSON.parse(stripMarkdownFences(raw)) as BusinessIdea[];
 }
 
@@ -149,8 +153,8 @@ export async function generatePlan(
   profile: OnboardingProfile
 ): Promise<BusinessPlan> {
   const message = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 2048,
+    model: "claude-sonnet-5",
+    max_tokens: 8000,
     system: `${AGENT_IDENTITY}\n\n${CORE_RULES}\n\nYou are creating a step-by-step business plan. Be specific and practical — every step should be something they can actually do this week. The plan must lead to their first dollar within 3 days. The path should be clear and achievable.`,
     messages: [
       {
@@ -160,7 +164,11 @@ export async function generatePlan(
     ],
   });
 
-  const raw =
-    message.content[0].type === "text" ? message.content[0].text : "";
+  // Models with adaptive thinking emit a thinking block first, so find the
+  // text block rather than assuming it's at index 0.
+  const textBlock = message.content.find(
+    (block): block is Anthropic.TextBlock => block.type === "text"
+  );
+  const raw = textBlock ? textBlock.text : "";
   return JSON.parse(stripMarkdownFences(raw)) as BusinessPlan;
 }
