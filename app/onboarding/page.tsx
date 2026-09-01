@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { StepLayout } from "@/components/onboarding/step-layout";
 import { GoalStep } from "@/components/onboarding/steps/goal-step";
@@ -13,6 +13,7 @@ import { NeighborhoodStep } from "@/components/onboarding/steps/neighborhood-ste
 import { TimeStep } from "@/components/onboarding/steps/time-step";
 import { BudgetStep } from "@/components/onboarding/steps/budget-step";
 import type { OnboardingProfile } from "@/lib/types";
+import { trackEvent } from "@/lib/analytics";
 
 const TOTAL_STEPS = 9;
 
@@ -27,6 +28,29 @@ const STEP_CONFIG = [
   { title: "How much time do you have?", subtitle: "Per week, roughly." },
   { title: "How much can you invest to start?", subtitle: "It's totally fine if the answer is $0." },
 ];
+
+const STEP_NAMES = [
+  "goal", "age", "interests", "skills", "tools",
+  "transportation", "neighborhood", "time", "budget",
+];
+
+// The `custom` free-text values below are redacted by trackEvent before they
+// reach the database — it stores only whether text was written and how long
+// it was, never the text itself. See lib/analytics.ts.
+function getStepValue(step: number, profile: OnboardingProfile): unknown {
+  switch (step) {
+    case 0: return profile.goal;
+    case 1: return profile.ageRange;
+    case 2: return { selected: profile.interests, custom: profile.customInterests };
+    case 3: return { selected: profile.skills, custom: profile.customSkills };
+    case 4: return profile.tools;
+    case 5: return profile.hasTransportation;
+    case 6: return profile.neighborhoodType;
+    case 7: return profile.timePerWeek;
+    case 8: return profile.startingBudget;
+    default: return null;
+  }
+}
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -45,6 +69,10 @@ export default function OnboardingPage() {
     startingBudget: null,
   });
 
+  useEffect(() => {
+    trackEvent("onboarding_started");
+  }, []);
+
   const canContinue = (() => {
     switch (step) {
       case 0: return profile.goal !== null;
@@ -61,9 +89,18 @@ export default function OnboardingPage() {
   })();
 
   const handleContinue = async () => {
+    // Track the step that was just completed
+    trackEvent("onboarding_step_completed", {
+      step,
+      stepName: STEP_NAMES[step],
+      value: getStepValue(step, profile),
+    });
+
     if (step < TOTAL_STEPS - 1) {
       setStep(step + 1);
     } else {
+      // Track onboarding completion with the full profile
+      trackEvent("onboarding_completed", { profile });
       // Save profile to sessionStorage and navigate to ideas
       sessionStorage.setItem("lemonade-profile", JSON.stringify(profile));
       router.push("/ideas");

@@ -9,6 +9,7 @@ import { mockIdeas } from "@/lib/mock-ideas";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import type { BusinessIdea, OnboardingProfile } from "@/lib/types";
+import { trackEvent } from "@/lib/analytics";
 
 export default function IdeasPage() {
   const router = useRouter();
@@ -42,6 +43,7 @@ export default function IdeasPage() {
         if (!res.ok) throw new Error("API error");
         const data = await res.json();
         setIdeas(data.ideas);
+        trackEvent("ideas_generated", { count: data.ideas.length });
       })
       .catch(() => {
         setError("Couldn't generate ideas — showing examples instead.");
@@ -54,6 +56,7 @@ export default function IdeasPage() {
     if (!selectedId) return;
     const chosen = ideas.find((i) => i.id === selectedId);
     if (chosen) {
+      trackEvent("idea_selected", { ideaId: chosen.id, ideaName: chosen.name });
       sessionStorage.setItem("lemonade-chosen-idea", JSON.stringify(chosen));
       router.push("/plan");
     }

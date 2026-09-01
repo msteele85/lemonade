@@ -1,11 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Home() {
   const router = useRouter();
+
+  useEffect(() => {
+    trackEvent("page_viewed", { page: "home" });
+  }, []);
 
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center px-6 bg-[#fff5c4]">
