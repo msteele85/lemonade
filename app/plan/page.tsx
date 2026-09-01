@@ -19,6 +19,7 @@ import {
 import Image from "next/image";
 import { downloadPlanPDF } from "@/lib/generate-pdf";
 import type { BusinessIdea, BusinessPlan, OnboardingProfile } from "@/lib/types";
+import { trackEvent } from "@/lib/analytics";
 
 export default function PlanPage() {
   const router = useRouter();
@@ -49,6 +50,7 @@ export default function PlanPage() {
         if (!res.ok) throw new Error("API error");
         const data = await res.json();
         setPlan(data.plan);
+        trackEvent("plan_generated", { ideaName: chosenIdea.name });
       })
       .catch(() => {
         setError("Something went wrong generating your plan. Please try again.");
@@ -213,7 +215,12 @@ export default function PlanPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45 }}
-              onClick={() => idea && plan && downloadPlanPDF(idea, plan)}
+              onClick={() => {
+                if (idea && plan) {
+                  trackEvent("pdf_downloaded", { ideaName: idea.name });
+                  downloadPlanPDF(idea, plan);
+                }
+              }}
               className="w-full flex items-center justify-center gap-2 bg-white hover:bg-navy-50 text-navy font-bold py-3 rounded-xl transition-colors border border-navy-200"
             >
               <Download className="w-4 h-4" />
