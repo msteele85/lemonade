@@ -25,8 +25,9 @@ export default function Home() {
         />
         <h1 className="text-5xl font-extrabold text-navy mb-3 font-title">Lemonade</h1>
         <p className="text-lg text-navy-600 mb-8">
-          Turn your skills into a real business. Answer a few questions
-          to build your custom plan in minutes.
+          Helping young entrepreneurs start real businesses — no
+          experience needed. Answer a few questions to build a
+          step-by-step plan based on your skills and resources.
         </p>
         <button
           onClick={() => router.push("/onboarding")}

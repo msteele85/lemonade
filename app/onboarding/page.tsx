@@ -19,8 +19,8 @@ const TOTAL_STEPS = 9;
 const STEP_CONFIG = [
   { title: "What's your goal?", subtitle: "So your ideas match what you're looking for." },
   { title: "How old are you?", subtitle: "So your ideas fit your age group." },
-  { title: "What are you into?", subtitle: "Pick up to 3 interests." },
-  { title: "What are you good at?", subtitle: "Pick up to 3 skills." },
+  { title: "What are you into?", subtitle: "Pick up to 3 — or write your own." },
+  { title: "What are you good at?", subtitle: "Pick up to 3 — or write your own." },
   { title: "What tools do you have?", subtitle: "So your ideas are realistic to start." },
   { title: "Do you have reliable transportation?", subtitle: "Either yourself or a parent/guardian who can drive you." },
   { title: "What's your area like?", subtitle: "No address needed — just the general vibe of where you live." },

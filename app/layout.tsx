@@ -8,7 +8,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lemonade \u2014 Turn Your Skills Into a Business",
+  title: "Lemonade – Helping young entrepreneurs start real businesses",
   description:
     "The easy button for teen entrepreneurship. Build your business ideas and step-by-step plan in minutes.",
 };
